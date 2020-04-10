@@ -67,4 +67,4 @@ def read_data(debug=False):
     if debug:
         print("exiting read_data")
     
-    return train_X, val_X, train_y, val_y
+    return train_X, train_y, val_X, val_y
