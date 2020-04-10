@@ -60,8 +60,8 @@ def read_data(debug=False):
     y_col = ['label']
     
     train_X = train_df.filter(X_col, axis='columns')
-    val_X = val_df.filter(y_col, axis='columns')
-    train_y = train_df.filter(X_col, axis='columns')
+    train_y = train_df.filter(y_col, axis='columns')
+    val_X = val_df.filter(X_col, axis='columns')
     val_y = val_df.filter(y_col, axis='columns')
     
     if debug:
