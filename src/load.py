@@ -3,7 +3,23 @@
 import os.path
 import pandas as pd
 from pathlib import Path
+
+def get_data_path():
+    '''Helper function to get data path within project.
+    '''
+    from pathlib import Path
     
+    path = Path('.').resolve()
+    path_string = path.absolute().as_posix()
+    if 'src' in path_string:
+        path = path.parent / 'data'
+    elif 'data' in path_string:
+        pass
+    else:
+        path = path / 'data'
+    path_to_data = f'{path.absolute().as_posix()}/'
+    return path_to_data
+
 def read_data(debug=False):
     '''Helper procedure to load dataset.
     
@@ -21,44 +37,27 @@ def read_data(debug=False):
     '''
     if debug:
         print("inside read_data")
-        
-    train = 'train.csv'
-    val = 'dev.csv'
+            
+    path = get_data_path()
+    train = path+'train.csv'
+    val = path+'dev.csv'
 
-    try:
-        if debug: 
-            print("try:reading train.csv")
-        train_df = pd.read_csv(train)
-        if debug: 
-            print("try:reading dev.csv")
-        val_df = pd.read_csv(val)
-    except:
-        try:
-            if debug:
-                print("except-try: path update")
-            data_folder = Path(os.path.dirname(__file__).replace('src', 'data'))
-        except:
-            if debug:
-                print("except-except: path update")
-            data_folder = Path(os.path.abspath('').replace('src', 'data'))
-        finally:
-            train = data_folder / train
-            val = data_folder / val
-            if debug: 
-                print("except-finally: reading train.csv")
-            train_df = pd.read_csv(train)
-            train_df['date'] = pd.to_datetime(train_df['date'])
-            if debug: 
-                print("except-finally: reading dev.csv")
-            val_df = pd.read_csv(val)
-            val_df['date'] = pd.to_datetime(val_df['date'])
-    
-    if debug:
-        print("data loaded - filtering DFs")
+    if debug: 
+        print(f"reading {train}")
+    train_df = pd.read_csv(train)
+    if debug: 
+        print(f"try:reading {val}")
+    val_df = pd.read_csv(val)
+
+    train_df['date'] = pd.to_datetime(train_df['date'])
+    val_df['date'] = pd.to_datetime(val_df['date'])
     
     X_col = ['ex_id', 'user_id', 'prod_id', 'rating', 'date', 'review']
     y_col = ['label']
     
+    if debug:
+        print("spliting train,val")
+        
     train_X = train_df.filter(X_col, axis='columns')
     val_X = val_df.filter(X_col, axis='columns')
     train_y = train_df.filter(y_col, axis='columns')
