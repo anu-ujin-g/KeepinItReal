@@ -2,7 +2,6 @@
 "Keepin' It Real: How to Identify Fake and Genuine Reviews"  
 DSGA-1003 Machine Learning Project
 ## Summary of Plans
-Which project you have chosen  
 For this project, our group will use the CodaLab Fake Review dataset provided to
 create a classification model for identifying fake reviews.
 ## Proposed Approach
@@ -19,7 +18,9 @@ We will first perform an EDA to see what criteria to use when classifying the re
 - [x] 30/31 Mar: Group Meeting; Proposal Draft
 - [x] 01 Apr: Proposal Due
 - [x] 05 Apr: Progress Update #1, EDA
-- [ ] 06 Apr: Progress Update #2, Class Imbalance
+- [x] 06 Apr: Progress Update #2, Class Imbalance
+- [x] 15 Apr: Feature Engineering
+- [ ] 20 Apr: Initial Model Building
 - [ ] 19 May: Project Due
 ## Project Dependencies
 * python3
