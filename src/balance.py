@@ -1,17 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import load
 import pandas as pd
 
-# tutorial / reference used
+# references
+# https://imbalanced-learn.readthedocs.io/en/stable/over_sampling.html#smote-adasyn
 # https://towardsdatascience.com/having-an-imbalanced-dataset-here-is-how-you-can-solve-it-1640568947eb
 
 #SMOTE
 import imblearn.over_sampling
-
-
-from imblearn.ensemble import BalancedBaggingClassifier
-from sklearn.tree import DecisionTreeClassifier
 
 
 def SMOTE(df, seed=42, debug=False):
@@ -37,13 +33,15 @@ def SMOTE(df, seed=42, debug=False):
     if debug: 
         print("inside SMOTE")
     
-    sm = imblearn.over_sampling.SMOTE(sampling_strategy='minority', random_state=seed)
+    sm = imblearn.over_sampling.SMOTENC(sampling_strategy='minority', 
+                                        categorical_features=['review'],
+                                        random_state=seed)
     
     if debug:
         print("oversampler instantiated")
     
-    df_X, df_y = sm.fit_sample(df.drop('label', axis=1), df['label'])
-    df = pd.concat([pd.DataFrame(df_X), pd.DataFrame(df_y)], axis=1)
+    df_X, df_y = sm.fit_sample(df.drop('label', axis='columns'), df['label'])
+    df = pd.concat([pd.DataFrame(df_X), pd.DataFrame(df_y)], axis='columns')
     
     if debug:
         print("oversampler fit_trained")
