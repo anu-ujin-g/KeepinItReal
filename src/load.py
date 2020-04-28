@@ -20,7 +20,7 @@ def get_data_path():
     path_to_data = f'{path.absolute().as_posix()}/'
     return path_to_data
 
-def read_data(debug=False):
+def read_data(train_data, val_data, debug=False):
     '''Helper procedure to load dataset.
     
     Parameters
@@ -39,8 +39,8 @@ def read_data(debug=False):
         print("inside read_data")
             
     path = get_data_path()
-    train = path+'train.csv'
-    val = path+'dev.csv'
+    train = path+train_data
+    val = path+val_data
 
     if debug: 
         print(f"reading {train}")
