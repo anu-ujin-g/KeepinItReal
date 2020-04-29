@@ -6,6 +6,7 @@ import numpy as np
 def transform(df):
     w2v = gensim.downloader.load('word2vec-google-news-300')
 
+    df = df.dropna()
     # Remove punctuation
     df['review'] = df['review'].apply(lambda x: ''.join([c for c in x if c.isalpha() or c==' ']))
 
