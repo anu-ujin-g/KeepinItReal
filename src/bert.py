@@ -17,7 +17,7 @@ def transform(df, save=False, name=''):
     df['review'] = df['review'].progress_apply(bert)
     
     if save:
-        df.to_csv(f'{load.get_data_path()}{name}_bert.csv', index=False)
+        df.to_pickle(f'{load.get_data_path()}{name}_bert.pickle')
 
     return bert, df
 
