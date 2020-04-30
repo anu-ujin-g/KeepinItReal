@@ -20,15 +20,22 @@ def get_data_path():
     path_to_data = f'{path.absolute().as_posix()}/'
     return path_to_data
 
-def read_data(train_data, val_data, debug=False):
+def read_data(train_data='train.csv', val_data='dev.csv', bert=False, debug=False):
     '''Helper procedure to load dataset.
     
     Parameters
     ----------
-    balance : boolean
-        Specifies whether to apply SMOTE (from balance.py) to the data
+    train_data: string
+        filename to load for training data
+        
+    val_data: string
+        filename to load for validation data
+        
+    bert: string
+        loads 'large'|'small' bert pickle data if set; default=False
     
-    debug : boolean to set debugging verbosity
+    debug : boolean 
+        sets debugging verbosity
     
     Returns
     -------
@@ -62,6 +69,14 @@ def read_data(train_data, val_data, debug=False):
     val_X = val_df.filter(X_col, axis='columns')
     train_y = train_df.filter(y_col, axis='columns')
     val_y = val_df.filter(y_col, axis='columns')
+    
+    if bert:
+        if debug: 
+            print(f"reading {path+'train_'+bert+'.pickle'}")
+        train_X = pd.read_pickle(path+'train_'+bert+'.pickle')
+        if debug: 
+            print(f"try:reading {path+'dev_'+bert+'.pickle'}")
+        val_X = pd.read_pickle(path+'dev_'+bert+'.pickle')
     
     if debug:
         print("exiting read_data")

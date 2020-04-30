@@ -74,7 +74,7 @@ def save_ROC_plot(preds, truth, score, file_name):
 def trainNN(x, y, param_space):
     # declare model, search params
     model = MLPClassifier()
-    clf = RandomizedSearchCV(model, param_space, n_jobs=-1, scoring='roc_auc', n_iter=20, verbose=10).fit(x, y)
+    clf = RandomizedSearchCV(model, param_space, n_jobs=5, cv='1', scoring='average_precision', n_iter=20, verbose=10).fit(x, y)
     
     return clf
 
@@ -93,18 +93,23 @@ def main():
     # }
     
     # Test Params -- soon to be Best Params, after I Grid Search
-    param_space = {
-        'hidden_layer_sizes': [(255,)],
-        'activation': ['relu'],
-        'solver': ['adam'],
-        'alpha': [1e-05],
-        'learning_rate': ['adaptive'],
-        'max_iter': [300],
+    params = {
+        'hidden_layer_sizes': (255,),
+        'activation': 'relu',
+        'solver': 'adam',
+        'alpha': 1e-05,
+        'learning_rate': 'adaptive',
+        'max_iter': 300,
     }
     
-    NN = trainNN(train_X, train_y, param_space)
+    # Grid search
+    # NN = trainNN(train_X, train_y, param_space)
     
-    with open('pickle_clf.pickle', 'wb') as file:
+    # Or single run
+    NN = MLPClassifier(**params).fit(train_X, train_y)
+    
+    path = load.get_data_path()
+    with open(path+'pickle_clf.pickle', 'wb') as file:
         pickle.dump(NN, file)
     
     # check train data
@@ -113,7 +118,7 @@ def main():
     print(f"Train Score: {100 * score:.2f}")
     try:
         plots_probs = save_ROC_plot(y_prob, y_truth, score, 'train')
-        print("Train ROC AUC: {plots_probs}")
+        print(f"Train ROC AUC: {plots_probs}")
     except:
         pass
     
@@ -123,11 +128,11 @@ def main():
     print(f"Test Score: {100 * score:.2f}")
     try:
         plots_probs = save_ROC_plot(y_prob, y_truth, score, 'test')
-        print("Test ROC AUC: {plots_probs}")
+        print(f"Test ROC AUC: {plots_probs}")
     except:
         pass
     
-    with open('pickle_nn.pickle', 'wb') as file:
+    with open(path+'pickle_nn.pickle', 'wb') as file:
         pickle.dump(NN.best_estimator_, file)
     
     
