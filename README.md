@@ -20,8 +20,12 @@ We will first perform an EDA to see what criteria to use when classifying the re
 - [x] 05 Apr: Progress Update #1, EDA
 - [x] 06 Apr: Progress Update #2, Class Imbalance
 - [x] 15 Apr: Feature Engineering
-- [ ] 20 Apr: Initial Model Building
+- [x] 20 Apr: Initial Model Building
+- [x] 29 Apr: Model Comparison (ROC AUC)
+- [ ] 03 May: AP Scores + Hyperparameter Optimization
 - [ ] 19 May: Project Due
+
 ## Project Dependencies
 * python3
 * pandas
+* a lot of stuff...
