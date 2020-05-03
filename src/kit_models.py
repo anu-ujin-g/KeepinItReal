@@ -7,9 +7,11 @@ from sklearn.naive_bayes import BernoulliNB
 from sklearn.neural_network import MLPClassifier
 from sklearn.linear_model import LogisticRegression
 
-from sklearn.metrics import average_precision_score, roc_curve, auc
-import matplotlib.pyplot as plt
 import load
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.metrics import average_precision_score, roc_curve, auc
+
 
 
 def svm(params=None):
@@ -80,9 +82,15 @@ def metrics(clf, test_X, test_y, name):
         plt.ylim((0,1))
         plt.legend(loc="lower right")
         plt.savefig(f'{load.get_data_path()}_{name}.png')
+    
+    def printConfusionMatrix(preds, truth):
+        print(pd.crosstab(truth.ravel(), preds, rownames=['True'],
+                          colnames=['Predicted'], margins=True))
         
     y_truth, y_pred, y_prob = test_y, clf.predict(test_X), clf.predict_proba(test_X)
     score = average_precision_score(y_truth,y_prob[:, 1])
+    
+    printConfusionMatrix(y_truth, y_pred)
     plotAUC(y_truth, y_pred, score, name)
 
 
