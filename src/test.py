@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import load
-import kit_models as km
-import kit_transformers as kt
+import kir_models as km
+import kir_transformers as kt
 
 import warnings
 
