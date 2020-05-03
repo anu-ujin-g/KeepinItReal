@@ -30,5 +30,8 @@ We will first perform an EDA to see what criteria to use when classifying the re
 
 ## Project Dependencies
 * python3
-* pandas
-* a lot of stuff...
+* pandas, numpy
+* sklearn
+* imblearn
+* spacy + 'en_trf_bertbaseuncased_lg'
+* gensim + 'word2vec-google-news-300'
