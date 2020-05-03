@@ -1,31 +1,34 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import sys
 import load
+import kit_models as km
+import kit_transformers as kt
 
-def main(debug=False):
+import warnings
+
+def main():
     '''loads datasets into dataframes using load.py and prints head(2) for each
     '''
-    if debug:
-        print("reading data")
-        
-    train_X, val_X, train_y, val_y = load.read_data(debug)
+    print("reading data")  
+    train_X, val_X, train_y, val_y = load.read_data()
     
-    if debug:
-        print("data read")
+    # downsample for testing
+    print("downsampling to head(20)")
+    tx = train_X.head(20).copy()
+    vx = val_X.head(20).copy()
+    ty = train_y.head(20).copy().values.ravel()
+    vy = val_y.head(20).copy().values.ravel()
     
-    print(f'train_X: cols={train_X.columns.values}\n dtype={train_X.dtypes}\n shape={train_X.shape}\n')
-    print(train_X.head(2))
-    print(f'val_X: cols={val_X.columns.values}\n dtype={train_X.dtypes}\n shape={val_X.shape}\n')
-    print(val_X.head(2))
-    print(f'train_y: cols={train_y.columns.values}\n dtype={train_X.dtypes}\n shape={train_y.shape}\n')
-    print(train_y.head(2))
-    print(f'val_y: cols={val_y.columns.values}\n dtype={train_X.dtypes}\n shape={val_y.shape}\n')
-    print(val_y.head(2))
+    transformers = ['kt.cv', 'kt.tfidf', 'kt.w2v', 'kt.bert']
+    models = ['km.svm', 'km.nb', 'km.nn', 'km.lr']
+    
+    for t in transformers:
+        t_ = eval(t)(tx.review)
+        tx_ = t_.transform(tx.review.copy())
+        vx_ = t_.transform(vx.review.copy())
+        for m in models:
+            print(f'mean accuracy {t}|{m}: {eval(m)().fit(tx_,ty).score(vx_,vy)}')
 
 if __name__ == "__main__":
-    debug = False
-    if "debug" in sys.argv:
-        debug = True
-        
-    main(debug)
+    warnings.filterwarnings("ignore")
+    main()
