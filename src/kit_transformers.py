@@ -3,6 +3,7 @@
 
 import load
 import spacy
+import pickle
 import numpy as np
 import gensim.downloader
 from subprocess import run
@@ -67,22 +68,31 @@ def bert(df, save_name=False, load_name=False):
             nlp = spacy.load(_bert)
         else:
             raise Exception(f"can't load: {_bert}")
+    
+    def save(df, file):
+        with open(f'{load.get_data_path()}{file}', 'wb') as f:
+            pickle.dump(df, f)
             
+    def load(file):
+        with open(f'{load.get_data_path()}{file}', 'rb') as f:
+            return pickle.load(f)
+    
     def transform(df):
         if load_name:
-            return load.one_file(load_name)
+            return load(load_name)
         
         # Initiate progress bar
         tqdm.pandas()
         df = df.progress_apply(lambda x: nlp(x).vector).to_list()
         
-        
         # Save so you don't need to re-transform the dataset every time
         if save_name:
-            df.to_pickle(f'{load.get_data_path()}{save_name}_bert.pickle')
+            save(df, save_name)
         
         return df
     ## .transform(df) casting
     bert.transform = transform
-        
+    bert.save = save
+    bert.load = load
+    
     return bert

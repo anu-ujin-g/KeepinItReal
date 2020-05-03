@@ -20,13 +20,6 @@ def get_data_path():
     path_to_data = f'{path.absolute().as_posix()}/'
     return path_to_data
 
-def one_file(file):
-    path = get_data_path()
-    if 'pickle' in file:
-        f = pd.read_pickle(f'{path}file')
-    else:
-        f = pd.read_csv(f'{path}file')
-
 def read_data(train_data='train.csv', val_data='dev.csv', bert=False, debug=False):
     '''Helper procedure to load dataset.
     
