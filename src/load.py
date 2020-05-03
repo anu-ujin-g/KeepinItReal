@@ -72,10 +72,10 @@ def read_data(train_data='train.csv', val_data='dev.csv', bert=False, debug=Fals
     
     if bert:
         if debug: 
-            print(f"reading {path+'train_'+bert+'.pickle'}")
+            print(f"reading {path}train_{bert}.pickle")
         train_X = pd.read_pickle(path+'train_'+bert+'.pickle')
         if debug: 
-            print(f"try:reading {path+'dev_'+bert+'.pickle'}")
+            print(f"try:reading {path}dev_{bert}.pickle")
         val_X = pd.read_pickle(path+'dev_'+bert+'.pickle')
     
     if debug:

@@ -16,14 +16,14 @@ import matplotlib.pyplot as plt
 
 import warnings
 
-def pre_process_to_pickle():
+def pre_process_to_pickle(version='large'):
     """Multi-layer Perceptron is sensitive to feature scaling;
         this function uses MinMaxScaler to scale input features between (-1,1)
     
     Returns:
         scaled: train_X, val_X
     """
-    train_X, val_X, train_y, val_y = load.read_data(bert=True)
+    train_X, val_X, train_y, val_y = load.read_data(bert=version)
     train_X.date = pd.to_datetime(train_X.date).astype('int64')
     train_X = pd.concat([train_X.drop('review', axis=1),
                          pd.DataFrame(train_X.review.tolist(),dtype=np.float32)],
@@ -40,10 +40,10 @@ def pre_process_to_pickle():
     val_X[cols] = scaler.transform(val_X[cols])
     
     path = load.get_data_path()
-    with open(path+'train_bert.pickle', 'wb') as file:
+    with open(f'{path}train_{version}.pickle', 'wb') as file:
         pickle.dump(train_X, file)
         
-    with open(path+'dev_bert.pickle', 'wb') as file:
+    with open(f'{path}dev_{version}.pickle', 'wb') as file:
         pickle.dump(val_X, file)
         
     return train_X, val_X
@@ -57,11 +57,11 @@ def save_ROC_plot(preds, truth, score, file_name):
     roc_auc = auc(fpr, tpr)
     
     plt.figure(figsize = (8, 8))
-    plt.plot(fpr, tpr, label = 'MLP (AUC = %0.3f, Accuracy = %0.3f)' % (roc_auc, score))
+    plt.plot(fpr, tpr, label = 'MLP (AUC = %0.3f, AP = %0.3f)' % (roc_auc, score))
     plt.plot([0, 1], [0, 1], 'k--')
     plt.xlabel('False Positive Rate')
     plt.ylabel('True Positive Rate')
-    plt.title('NN models ROC AUC')
+    plt.title('NN - AUC vs AP ??, is this a thing')
     plt.xlim((0,1))
     plt.ylim((0,1))
     plt.legend(loc="lower right")
@@ -71,42 +71,59 @@ def save_ROC_plot(preds, truth, score, file_name):
     
     return roc_auc
 
-def trainNN(x, y, param_space):
+def trainNN(x, y, params=None):
+    '''Returns MLP NN fitted with best params
+    '''
+    if not params:
+        params = {
+            'activation': 'logistic', 
+            'alpha': 0.1, 
+            'hidden_layer_sizes': (255, 100, 50), 
+            'learning_rate': 'constant', 
+            'max_iter': 200, 
+            'solver': 'sgd'
+        }
+    
+    NN = MLPClassifier(**params).fit(x, y.values.ravel())
+    return NN
+    
+
+def searchNN(x, y, param_space):
     # declare model, search params
     model = MLPClassifier()
-    clf = RandomizedSearchCV(model, param_space, n_jobs=5, cv='1', scoring='average_precision', n_iter=20, verbose=10).fit(x, y)
+    clf = RandomizedSearchCV(model, param_space, n_jobs=5, cv=3, scoring='average_precision', n_iter=30, verbose=10).fit(x, y.values.ravel())
     
     return clf
 
 
 def main():
-    train_X, val_X, train_y, val_y = load.read_data(bert=True, debug=True)
+    train_X, val_X, train_y, val_y = load.read_data(bert='large', debug=True)
     
     # Grid Search Params
-    # param_space = {
-    #     'hidden_layer_sizes': [(255,100,50), (50,100,255), (50,50,50), (255,), (100,), (50,)],
-    #     'activation': ['logistic', 'tanh', 'relu'],
-    #     'solver': ['sgd', 'adam', 'lbfgs'],
-    #     'alpha': 10.0 ** -np.arange(1, 7),
-    #     'learning_rate': ['constant', 'adaptive', 'invscaling'],
-    #     'max_iter': [100, 200, 300],
-    # }
-    
-    # Test Params -- soon to be Best Params, after I Grid Search
-    params = {
-        'hidden_layer_sizes': (255,),
-        'activation': 'relu',
-        'solver': 'adam',
-        'alpha': 1e-05,
-        'learning_rate': 'adaptive',
-        'max_iter': 300,
+    param_space = {
+        'hidden_layer_sizes': [(255,100,50), (50,50,50), (255,), (100,), (50,)],
+        'activation': ['logistic', 'tanh', 'relu'],
+        'solver': ['sgd', 'adam', 'lbfgs'],
+        'alpha': 10.0 ** -np.arange(1, 4),
+        'learning_rate': ['constant', 'adaptive', 'invscaling'],
+        'max_iter': [100, 200, 300],
     }
     
+    # Test Params -- soon to be Best Params, after I Grid Search
+    # params = {
+    #     'hidden_layer_sizes': (255,),
+    #     'activation': 'relu',
+    #     'solver': 'adam',
+    #     'alpha': 1e-05,
+    #     'learning_rate': 'adaptive',
+    #     'max_iter': 300,
+    # }
+    
     # Grid search
-    # NN = trainNN(train_X, train_y, param_space)
+    NN = searchNN(train_X, train_y, param_space)
     
     # Or single run
-    NN = MLPClassifier(**params).fit(train_X, train_y)
+    # NN = MLPClassifier(**params).fit(train_X, train_y)
     
     path = load.get_data_path()
     with open(path+'pickle_clf.pickle', 'wb') as file:
