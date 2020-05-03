@@ -54,7 +54,7 @@ def w2v(df):
     return w2v
 
 
-def bert(df, save_name=False):
+def bert(df, save_name=False, load_name=False):
     '''Returns bert transformer with `.transform(df.review)` function
     '''
     try:
@@ -69,6 +69,9 @@ def bert(df, save_name=False):
             raise Exception(f"can't load: {_bert}")
             
     def transform(df):
+        if load_name:
+            return load.one_file(load_name)
+        
         # Initiate progress bar
         tqdm.pandas()
         df = df.progress_apply(lambda x: nlp(x).vector).to_list()
