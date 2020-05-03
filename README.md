@@ -22,7 +22,10 @@ We will first perform an EDA to see what criteria to use when classifying the re
 - [x] 15 Apr: Feature Engineering
 - [x] 20 Apr: Initial Model Building
 - [x] 29 Apr: Model Comparison (ROC AUC)
-- [ ] 03 May: AP Scores + Hyperparameter Optimization
+- [x] 03 May: AP Scores + Hyperparameter Optimization
+- [ ] 07 May: Balancing/Tuning to correct low AP
+- [ ] 15 May: _goal:_ CodaLab implementation
+- [ ] 15 May: **Draft Write-up**
 - [ ] 19 May: Project Due
 
 ## Project Dependencies
