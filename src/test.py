@@ -19,15 +19,19 @@ def main():
     ty = train_y.head(20).copy().values.ravel()
     vy = val_y.head(20).copy().values.ravel()
     
-    transformers = ['kt.cv', 'kt.tfidf', 'kt.w2v', 'kt.bert']
-    models = ['km.svm', 'km.nb', 'km.nn', 'km.lr']
+    transformers = ['cv', 'tfidf', 'w2v', 'bert']
+    models = ['svm', 'nb', 'nn', 'lr']
+    save_plots = True
     
     for t in transformers:
-        t_ = eval(t)(tx.review)
+        t_ = eval('kt.'+t)(tx.review)
         tx_ = t_.transform(tx.review.copy())
         vx_ = t_.transform(vx.review.copy())
         for m in models:
-            print(f'mean accuracy {t}|{m}: {eval(m)().fit(tx_,ty).score(vx_,vy)}')
+            m_ = eval('km.'+m)().fit(tx_,ty)
+            print(f'mean accuracy {t}|{m}: {m_.score(vx_,vy)}')
+            if save_plots:
+                km.metrics(m_, vx_, vy, f'{t}-{m}')
 
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")
