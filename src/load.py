@@ -20,6 +20,22 @@ def get_data_path():
     path_to_data = f'{path.absolute().as_posix()}/'
     return path_to_data
 
+def read_test(test_data='test.csv', bert=False):
+    path = get_data_path()
+    test = path+test_data
+    
+    test_df = pd.read_csv(test)
+    test_df['date'] = pd.to_datetime(test_df['date']).astype('int64')
+    
+    X_col = ['ex_id', 'user_id', 'prod_id', 'rating', 'date', 'review']
+    test_X = test_df.filter(X_col, axis='columns')
+    
+    if bert:
+        test_X = pd.read_pickle(path+'test_'+bert+'.pickle')
+    
+    return test_X
+    
+
 def read_data(train_data='train.csv', val_data='dev.csv', bert=False, debug=False):
     '''Helper procedure to load dataset.
     
@@ -56,8 +72,8 @@ def read_data(train_data='train.csv', val_data='dev.csv', bert=False, debug=Fals
         print(f"try:reading {val}")
     val_df = pd.read_csv(val)
 
-    train_df['date'] = pd.to_datetime(train_df['date'])
-    val_df['date'] = pd.to_datetime(val_df['date'])
+    train_df['date'] = pd.to_datetime(train_df['date']).astype('int64')
+    val_df['date'] = pd.to_datetime(val_df['date']).astype('int64')
     
     X_col = ['ex_id', 'user_id', 'prod_id', 'rating', 'date', 'review']
     y_col = ['label']
