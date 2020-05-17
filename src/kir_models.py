@@ -16,7 +16,7 @@ from sklearn.metrics import average_precision_score, roc_curve, auc
 
 def svm(params=None):
     if not params:
-        ## Using values from svm.py
+        ## Best Model Params; invert results?
         params = {
             'max_iter': 700,
             'C': 1,
@@ -28,7 +28,7 @@ def svm(params=None):
 
 def nb(params=None):
     if not params:
-        ## No values specified in Feat_Eng_AG.ipynb; using BernoulliNB defaults
+        ## Best Model Params
         params = {
             'alpha': 1.0, 
             'binarize': 0.0, 
@@ -40,7 +40,7 @@ def nb(params=None):
         
 def nn(params=None):
     if not params:
-        ## Using values from nn.py
+        ## Best Model Params
         params = {
             'activation': 'logistic', 
             'alpha': 0.1, 
@@ -54,12 +54,12 @@ def nn(params=None):
 
 def lr(params=None):
     if not params:
-        ## No values specified ; using LogisticRegression defaults
+        ## Best Model Params
         params = {
-            'C': 1.0,
+            'C': 0.1,
             'max_iter': 100,
             'penalty': 'l2',
-            'solver': 'lbfgs',
+            'solver': 'liblinear'
         }
 
     return LogisticRegression(**params)
