@@ -1,22 +1,24 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import load
-import spacy
-import pickle
+# import load
+# import spacy
+
+
+# import pickle
 import numpy as np
-import gensim.downloader
-from subprocess import run
+# import gensim.downloader
+# from subprocess import run
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import CountVectorizer
 
 ## progress bar for bert so I don't go crazy...
 from tqdm import tqdm
 
-def cv(df):
+def cv(df, params):
     '''Returns fitted `cv.fit(df.review)` with `.transform(df.review)` function
     '''
-    countvec = CountVectorizer(ngram_range=(1,2), stop_words='english', binary=True)
+    countvec = CountVectorizer(ngram_range=(1,2), stop_words='english', binary=True, **params)
     
     return countvec.fit(df)
 
@@ -25,6 +27,13 @@ def tfidf(df):
     '''Returns fitted `tfidf.fit(df.review)` with `.transform(df.review)` function
     '''
     tfidfvec = TfidfVectorizer(stop_words='english', binary=True, use_idf=True)
+
+    return tfidfvec.fit(df)
+
+def tfidf_new(df, params):
+    '''Returns fitted `tfidf.fit(df.review)` with `.transform(df.review)` function
+    '''
+    tfidfvec = TfidfVectorizer(stop_words='english', binary=True, use_idf=True, **params)
 
     return tfidfvec.fit(df)
 
