@@ -90,11 +90,16 @@ def metrics(clf, test_X, test_y, name):
         print(pd.crosstab(truth.ravel(), preds, rownames=['True'],
                           colnames=['Predicted'], margins=True))
         
+    def pickleData():
+        with open(f'{load.get_data_path()}_{name}_metrics.pickle', 'wb') as file:
+            pickle.dump((clf, text_X, test_y, name), file)
+        
     y_truth, y_pred, y_prob = test_y, clf.predict(test_X), clf.predict_proba(test_X)
     score = average_precision_score(y_truth,y_prob[:, 1])
     
     printConfusionMatrix(y_truth, y_pred)
     plotAUC(y_truth, y_pred, score, name)
+    pickleData()
 
 
     
