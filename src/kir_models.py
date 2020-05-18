@@ -84,8 +84,8 @@ def metrics(clf, test_X, test_y, name):
         plt.legend(loc="lower right")
         
         # convience for me...
-        # plt.savefig(f'{load.get_data_path()}_{name}.png')
-        plt.savefig(f'{load.get_data_path()}_{name.split("-")[0]}/_{name}.png')
+        plt.savefig(f'{load.get_data_path()}_{name}.png')
+        # plt.savefig(f'{load.get_data_path()}_{name.split("-")[0]}/_{name}.png')
     
     def printConfusionMatrix(preds, truth):
         print(pd.crosstab(truth.ravel(), preds, rownames=['True'],
