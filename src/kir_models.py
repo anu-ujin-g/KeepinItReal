@@ -65,14 +65,13 @@ def lr(params=None):
 
     return LogisticRegression(**params)
 
-def featureEngineering(df_x, df_y):
+def featureEngineering(df_x, df_y=None, fake_user_set=set()):
     
     df = df_x.sort_values('date')
     new_features = ['rating_indicator', 'previous_fake', 'reviews_today']
     
     df[new_features] = pd.DataFrame([[0, 0, 0]], index=df.index)
     
-    fake_user_set = set()
     today = None
     
     for index, row in df.iterrows():  
@@ -96,12 +95,16 @@ def featureEngineering(df_x, df_y):
         df.at[index, 'reviews_today'] = users_reviews_today[row['user_id']]
         
         # Update fake_user_set after setting values to avoid leakage
-        if df_y.at[index, 'label'] == 1:
-            fake_user_set.add(row['user_id'])
+        try: 
+            if df_y.at[index, 'label'] == 1:
+                fake_user_set.add(row['user_id'])
+        except:
+            # no df_y included; probably on the test set
+            pass
             
     df.sort_index(inplace=True)
     
-    return df
+    return df, fake_user_set
     
 def metrics(clf, test_X, test_y, name):
     def plotAUC(preds, truth, score, name):
