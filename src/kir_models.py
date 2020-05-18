@@ -77,11 +77,14 @@ def metrics(clf, test_X, test_y, name):
         plt.plot([0, 1], [0, 1], 'k--')
         plt.xlabel('False Positive Rate')
         plt.ylabel('True Positive Rate')
-        plt.title('{name} - AUC')
+        plt.title(f'{name} - AUC')
         plt.xlim((0,1))
         plt.ylim((0,1))
         plt.legend(loc="lower right")
-        plt.savefig(f'{load.get_data_path()}_{name}.png')
+        
+        # convience for me...
+        # plt.savefig(f'{load.get_data_path()}_{name}.png')
+        plt.savefig(f'{load.get_data_path()}_{name.split("-")[0]}/_{name}.png')
     
     def printConfusionMatrix(preds, truth):
         print(pd.crosstab(truth.ravel(), preds, rownames=['True'],
