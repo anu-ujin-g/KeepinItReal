@@ -32,10 +32,9 @@ https://scikit-learn.org/stable/modules/generated/sklearn.metrics.roc_auc_score.
 - [x] 20 Apr: Initial Model Building
 - [x] 29 Apr: Model Comparison (ROC AUC)
 - [x] 03 May: AP Scores + Hyperparameter Optimization
-- [ ] 07 May: Balancing/Tuning to correct low AP
-- [ ] 15 May: _goal:_ CodaLab implementation
-- [ ] 15 May: **Draft Write-up**
-- [ ] 19 May: Project Due
+- [x] 07 May: Balancing/Tuning to correct low AP
+- [x] 15 May: **Draft Write-up**
+- [x] 19 May: Project Due
 
 ## Project Dependencies
 * python3
